@@ -1,60 +1,830 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Lead Form</title>
-    <!-- Client ID: anmolsingh123 -->
-  </head>
-  <body>
-    <form id="lead-form">
-      <label>
-        Name
-        <input name="name" type="text" placeholder="Jane Doe" />
-      </label>
-      <label>
-        Email
-        <input name="email" type="email" placeholder="jane@example.com" />
-      </label>
-      <label>
-        Phone
-        <input name="phone" type="tel" placeholder="+91 98765 43210" />
-      </label>
-      <button type="submit">Submit</button>
-    </form>
-    <p id="lead-status" aria-live="polite"></p>
-    <script>
-      const endpoint = 'https://saasprojrct.vercel.app/api/leads';
-      const apiKey = 'i_ux4zD3Wf-NEoaUxJS8mthk52mE-WRASNo9l15IO9A';
-      const form = document.getElementById('lead-form');
-      const status = document.getElementById('lead-status');
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anmol Singh — MERN & Next.js Full-Stack Developer | Chandigarh</title>
+<meta name="description" content="Portfolio of Anmol Singh, a full-stack MERN and Next.js developer based in Chandigarh, India. Responsive, SEO-friendly web apps for restaurants, taxi booking, education, local business and real estate.">
+<meta name="keywords" content="Anmol Singh, MERN developer, Next.js developer, full stack developer Chandigarh, React developer India, web developer portfolio">
+<meta name="author" content="Anmol Singh">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://anmoldev.example.com/">
 
-      form.addEventListener('submit', async function (event) {
-        event.preventDefault();
-        status.textContent = 'Submitting...';
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Anmol Singh — MERN & Next.js Full-Stack Developer">
+<meta property="og:description" content="Full-stack developer in Chandigarh building responsive, SEO-friendly MERN and Next.js products.">
+<meta property="og:locale" content="en_IN">
+<meta property="og:site_name" content="Anmol Dev">
 
-        try {
-          const payload = Object.fromEntries(new FormData(form).entries());
-          const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Api-Key': apiKey
-            },
-            body: JSON.stringify(payload)
-          });
+<!-- Twitter -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Anmol Singh — MERN & Next.js Full-Stack Developer">
+<meta name="twitter:description" content="Full-stack developer in Chandigarh building responsive, SEO-friendly MERN and Next.js products.">
 
-          if (!response.ok) {
-            const message = await response.text();
-            throw new Error(message || 'Failed to submit lead');
-          }
+<meta name="theme-color" content="#0B0F19">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230B0F19'/%3E%3Crect x='4' y='15' width='16' height='3' rx='1.5' fill='%23D6A85C'/%3E%3Crect x='6' y='10' width='12' height='3' rx='1.5' fill='%234FD1C5'/%3E%3Crect x='8' y='5' width='8' height='3' rx='1.5' fill='%23D6A85C'/%3E%3C/svg%3E">
 
-          form.reset();
-          status.textContent = 'Lead submitted successfully.';
-        } catch (error) {
-          status.textContent = error instanceof Error ? error.message : 'Failed to submit lead';
-        }
+<!-- Fonts: exactly two families used across the entire site -->
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Anmol Singh",
+  "jobTitle": "Full-Stack Developer (MERN, Next.js)",
+  "email": "mailto:singanmol714@gmail.com",
+  "telephone": "+91-7851037082",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Chandigarh",
+    "addressCountry": "IN"
+  },
+  "knowsAbout": ["MongoDB", "Express.js", "React", "Node.js", "Next.js", "Tailwind CSS", "Bootstrap", "Git", "GitHub", "SEO"]
+}
+</script>
+
+<style>
+  /* ============ DESIGN TOKENS ============ */
+  :root{
+    --ink: #0B0F19;
+    --ink-2: #0E1320;
+    --surface: #131826;
+    --surface-2: #1B2236;
+    --line: rgba(241,237,228,0.09);
+    --line-strong: rgba(241,237,228,0.16);
+    --paper: #F1EDE4;
+    --muted: #8B93A7;
+    --gold: #D6A85C;
+    --gold-soft: rgba(214,168,92,0.14);
+    --teal: #4FD1C5;
+    --teal-soft: rgba(79,209,197,0.14);
+    --error: #EF4444;
+    --success: #4FD1C5;
+
+    --font-display: 'Clash Display', 'Satoshi', sans-serif;
+    --font-body: 'Satoshi', 'Clash Display', sans-serif;
+
+    --container: 1180px;
+    --pad: clamp(20px, 5vw, 56px);
+    --section-pad: clamp(64px, 10vw, 132px);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --ease: cubic-bezier(.22,1,.36,1);
+  }
+
+  *,*::before,*::after{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; scroll-padding-top: 84px; }
+  body{
+    margin:0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-body);
+    font-weight: 400;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  img,svg{ display:block; max-width:100%; }
+  a{ color: inherit; text-decoration:none; }
+  ul{ list-style:none; margin:0; padding:0; }
+  h1,h2,h3,h4{ font-family: var(--font-display); font-weight: 600; line-height:1.08; margin:0; letter-spacing:-0.01em; }
+  p{ margin:0; }
+  button{ font-family: inherit; cursor:pointer; }
+
+  /* background texture: faint blueprint dot grid, ties to "stack/build" theme */
+  body{
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(241,237,228,0.045) 1px, transparent 0);
+    background-size: 28px 28px;
+    background-attachment: fixed;
+  }
+
+  ::selection{ background: var(--gold); color: var(--ink); }
+
+  :focus-visible{
+    outline: 2px solid var(--teal);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  .container{
+    max-width: var(--container);
+    margin-inline: auto;
+    padding-inline: var(--pad);
+  }
+
+  .skip-link{
+    position:absolute; left:-999px; top:auto;
+    background: var(--gold); color: var(--ink);
+    padding: 10px 16px; border-radius: 8px; font-weight:700;
+    z-index: 999;
+  }
+  .skip-link:focus{ left: 16px; top: 16px; }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family: var(--font-body);
+    font-weight:700;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background: var(--gold); }
+
+  .section{ padding-block: var(--section-pad); }
+  .section-head{ max-width: 640px; margin-bottom: clamp(36px, 6vw, 64px); }
+  .section-head h2{ font-size: clamp(1.9rem, 3.6vw, 2.7rem); margin-top: 14px; }
+  .section-head p{ margin-top: 16px; color: var(--muted); font-size: 1.05rem; }
+
+  /* reveal-on-scroll */
+  .reveal{ opacity:0; transform: translateY(22px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+  .reveal.is-visible{ opacity:1; transform:none; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .reveal{ opacity:1; transform:none; transition:none; }
+    *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+  }
+
+  /* ============ NAV ============ */
+  header.site-nav{
+    position: sticky; top:0; z-index: 100;
+    background: rgba(11,15,25,0.78);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-block: 16px;
+  }
+  .logo{ display:flex; align-items:center; gap:10px; font-family: var(--font-display); font-weight:700; font-size:1.05rem; letter-spacing:-0.01em; }
+  .logo-mark{ display:flex; flex-direction:column; gap:3px; width:22px; }
+  .logo-mark span{ height:3px; border-radius:2px; }
+  .logo-mark span:nth-child(1){ width:100%; background: var(--gold); }
+  .logo-mark span:nth-child(2){ width:72%; background: var(--teal); }
+  .logo-mark span:nth-child(3){ width:46%; background: var(--gold); }
+  .logo small{ color: var(--muted); font-family: var(--font-body); font-weight:500; }
+
+  nav.primary-links{ display:none; }
+  nav.primary-links ul{ display:flex; gap: clamp(20px,3vw,40px); }
+  nav.primary-links a{
+    font-size: 0.92rem; font-weight:500; color: var(--muted);
+    position:relative; padding-bottom:4px; transition: color .25s var(--ease);
+  }
+  nav.primary-links a::after{
+    content:""; position:absolute; left:0; right:100%; bottom:0; height:2px;
+    background: var(--gold); transition: right .3s var(--ease);
+  }
+  nav.primary-links a:hover, nav.primary-links a.active{ color: var(--paper); }
+  nav.primary-links a:hover::after, nav.primary-links a.active::after{ right:0; }
+
+  .nav-cta{
+    display:none;
+    font-size: 0.85rem; font-weight:700; color: var(--ink);
+    background: var(--gold); padding: 10px 18px; border-radius: 999px;
+    transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+  }
+  .nav-cta:hover{ transform: translateY(-2px); box-shadow: 0 10px 24px -10px rgba(214,168,92,0.55); }
+
+  .menu-btn{
+    display:flex; flex-direction:column; gap:5px; justify-content:center; align-items:center;
+    width:38px; height:38px; background:none; border:1px solid var(--line-strong); border-radius:8px;
+  }
+  .menu-btn span{ width:16px; height:2px; background: var(--paper); border-radius:2px; transition: transform .25s var(--ease), opacity .25s var(--ease); }
+  .menu-btn[aria-expanded="true"] span:nth-child(1){ transform: translateY(7px) rotate(45deg); }
+  .menu-btn[aria-expanded="true"] span:nth-child(2){ opacity:0; }
+  .menu-btn[aria-expanded="true"] span:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-panel{
+    max-height:0; overflow:hidden; transition: max-height .35s var(--ease);
+    border-bottom: 1px solid transparent;
+  }
+  .mobile-panel.open{ max-height: 360px; border-bottom: 1px solid var(--line); }
+  .mobile-panel ul{ padding: 8px var(--pad) 22px; display:flex; flex-direction:column; gap: 4px; }
+  .mobile-panel a{ display:block; padding: 12px 4px; font-size:1.02rem; color: var(--paper); border-bottom: 1px solid var(--line); }
+  .mobile-panel a:last-child{ border-bottom:none; }
+
+  /* ============ HERO ============ */
+  .hero{ padding-block: clamp(56px,9vw,104px) clamp(64px,9vw,120px); }
+  .hero-grid{ display:grid; gap: 48px; align-items:center; }
+  .status-pill{
+    display:inline-flex; align-items:center; gap:9px;
+    border: 1px solid var(--line-strong); padding: 7px 14px 7px 10px; border-radius: 999px;
+    font-size: 0.8rem; color: var(--muted); margin-bottom: 22px;
+  }
+  .status-dot{ width:8px; height:8px; border-radius:50%; background: var(--teal); position:relative; }
+  .status-dot::after{
+    content:""; position:absolute; inset:-4px; border-radius:50%; border:1px solid var(--teal);
+    animation: pulse 2.2s var(--ease) infinite;
+  }
+  @keyframes pulse{ 0%{ transform:scale(.6); opacity:.9;} 100%{ transform:scale(1.9); opacity:0; } }
+
+  .hero h1{ font-size: clamp(2.6rem, 7vw, 4.6rem); }
+  .hero .role{
+    font-family: var(--font-display); font-weight:500;
+    font-size: clamp(1.15rem, 2.4vw, 1.55rem);
+    color: var(--teal); margin-top: 12px;
+  }
+  .hero p.lede{ margin-top:20px; max-width: 52ch; color: var(--muted); font-size: 1.08rem; }
+  .hero-ctas{ display:flex; flex-wrap:wrap; gap:14px; margin-top:34px; }
+
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    font-weight:700; font-size:0.92rem; padding: 14px 24px; border-radius: 999px;
+    transition: transform .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease);
+    border: 1px solid transparent;
+  }
+  .btn-primary{ background: var(--gold); color: var(--ink); }
+  .btn-primary:hover{ transform: translateY(-3px); box-shadow: 0 14px 30px -12px rgba(214,168,92,0.55); }
+  .btn-ghost{ border-color: var(--line-strong); color: var(--paper); }
+  .btn-ghost:hover{ border-color: var(--teal); color: var(--teal); transform: translateY(-3px); }
+
+  /* stack tower — signature visual, reused in skills section */
+  .tower-card{
+    background: linear-gradient(180deg, var(--surface), var(--surface-2));
+    border: 1px solid var(--line); border-radius: var(--radius);
+    padding: clamp(20px,3vw,30px);
+  }
+  .tower-card .tower-label{ font-size:0.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:18px; }
+  .tower{ display:flex; flex-direction:column; gap:10px; }
+  .tower-layer{
+    border-radius: var(--radius-sm); padding: 14px 16px; border:1px solid var(--line);
+    background: rgba(241,237,228,0.025);
+    transition: border-color .25s var(--ease), background .25s var(--ease);
+  }
+  .tower-layer:hover{ border-color: var(--line-strong); background: rgba(241,237,228,0.045); }
+  .tower-layer .layer-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .tower-layer .layer-name{ font-family: var(--font-display); font-weight:600; font-size:0.98rem; }
+  .tower-layer .layer-tag{ font-size:0.68rem; letter-spacing:.1em; text-transform:uppercase; color: var(--muted); }
+  .chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{
+    font-size: 0.78rem; font-weight:500; padding: 6px 12px; border-radius: 999px;
+    background: rgba(241,237,228,0.05); border: 1px solid var(--line); color: var(--paper);
+  }
+  .tower-layer:nth-child(1){ width:100%; }
+  .tower-layer:nth-child(2){ width:90%; margin-inline:auto; }
+  .tower-layer:nth-child(3){ width:78%; margin-inline:auto; }
+  .accent-gold .layer-name{ color: var(--gold); }
+  .accent-teal .layer-name{ color: var(--teal); }
+
+  /* ============ ABOUT ============ */
+  .about-grid{ display:grid; gap: 40px; }
+  .about-bio p{ color: var(--muted); font-size: 1.06rem; max-width: 58ch; }
+  .about-bio p + p{ margin-top: 16px; }
+  .facts{ display:grid; grid-template-columns: 1fr; gap: 0; border-top: 1px solid var(--line); }
+  .facts dl{ display:flex; justify-content:space-between; align-items:baseline; padding: 16px 0; border-bottom: 1px solid var(--line); margin:0; gap: 16px; }
+  .facts dt{ font-size: 0.78rem; letter-spacing:.1em; text-transform:uppercase; color: var(--muted); }
+  .facts dd{ margin:0; font-family: var(--font-display); font-weight:500; font-size:1rem; text-align:right; }
+  .facts dd a{ border-bottom: 1px solid transparent; transition: border-color .2s var(--ease), color .2s var(--ease); }
+  .facts dd a:hover{ color: var(--gold); border-color: var(--gold); }
+
+  /* ============ SKILLS (tower expanded) + workflow ============ */
+  .workflow-row{ display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; }
+  .workflow-chip{
+    display:flex; align-items:center; gap:10px;
+    border:1px solid var(--line); border-radius: var(--radius-sm); padding: 12px 16px;
+    background: var(--surface); font-size:0.9rem; color:var(--paper);
+  }
+  .workflow-chip svg{ width:18px; height:18px; flex-shrink:0; color: var(--teal); }
+
+  /* ============ WORK ============ */
+  .work-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 24px; }
+  .project-card{
+    background: var(--surface); border:1px solid var(--line); border-radius: var(--radius);
+    padding: clamp(22px,3vw,28px); display:flex; flex-direction:column; gap:18px;
+    transition: transform .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
+  }
+  .project-card:hover{ transform: translateY(-6px); border-color: var(--line-strong); box-shadow: 0 24px 48px -28px rgba(0,0,0,0.6); }
+  .project-emblem{
+    width:52px; height:52px; border-radius: 14px; display:flex; align-items:center; justify-content:center;
+    background: var(--emblem-bg, var(--gold-soft));
+  }
+  .project-emblem svg{ width:26px; height:26px; color: var(--emblem-fg, var(--gold)); }
+  .project-card .cat{ font-size:0.68rem; letter-spacing:.14em; text-transform:uppercase; color: var(--emblem-fg, var(--gold)); font-weight:700; }
+  .project-card h3{ font-size:1.28rem; margin-top:6px; }
+  .project-card p{ color: var(--muted); font-size:0.96rem; margin-top:4px; }
+  .project-tags{ display:flex; flex-wrap:wrap; gap:8px; margin-top:auto; padding-top:6px; }
+  .project-tags span{ font-size:0.74rem; padding:5px 10px; border-radius:999px; border:1px solid var(--line); color: var(--muted); }
+  .project-link{
+    display:inline-flex; align-items:center; gap:6px; font-size:0.86rem; font-weight:700; color: var(--paper);
+    margin-top:8px; border-bottom: 1px solid var(--line-strong); padding-bottom: 2px; width:fit-content;
+    transition: color .2s var(--ease), border-color .2s var(--ease), gap .2s var(--ease);
+  }
+  .project-link:hover{ color: var(--gold); border-color: var(--gold); gap:10px; }
+  .project-link svg{ width:14px; height:14px; }
+
+  /* ============ CONTACT / LEAD FORM ============ */
+  .contact-card{
+    background: linear-gradient(155deg, var(--surface), var(--ink-2));
+    border:1px solid var(--line); border-radius: var(--radius);
+    padding: clamp(32px,6vw,64px);
+  }
+  .contact-card h2{ font-size: clamp(2rem,5vw,3rem); max-width: 18ch; }
+  .contact-card > p{ color: var(--muted); margin-top:16px; font-size:1.05rem; }
+
+  .contact-grid{
+    display:grid;
+    gap: 48px;
+    align-items: start;
+  }
+
+  /* Lead Form Styles */
+  .lead-form-wrapper{ max-width: 520px; }
+  .lead-form-wrapper form{ display:flex; flex-direction:column; gap: 20px; }
+  .form-group{ display:flex; flex-direction:column; gap: 6px; }
+  .form-group label{
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .form-group input{
+    width:100%;
+    background: rgba(241,237,228,0.04);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    font-family: var(--font-body);
+    font-size: 0.96rem;
+    color: var(--paper);
+    transition: border-color .25s var(--ease), background .25s var(--ease), box-shadow .25s var(--ease);
+  }
+  .form-group input::placeholder{ color: var(--muted); opacity: 0.6; }
+  .form-group input:focus{
+    outline: none;
+    border-color: var(--teal);
+    background: rgba(241,237,228,0.06);
+    box-shadow: 0 0 0 3px rgba(79,209,197,0.12);
+  }
+  .form-group input:disabled{ opacity: 0.5; cursor: not-allowed; }
+
+  .form-submit-btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    font-family: var(--font-body); font-weight:700; font-size:0.95rem;
+    padding: 16px 28px; border-radius: 999px;
+    background: var(--gold); color: var(--ink);
+    border: none;
+    transition: transform .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease);
+  }
+  .form-submit-btn:hover:not(:disabled){ transform: translateY(-3px); box-shadow: 0 14px 30px -12px rgba(214,168,92,0.55); }
+  .form-submit-btn:disabled{ opacity: 0.6; cursor: not-allowed; transform: none; }
+  .form-submit-btn .spinner{
+    width: 16px; height: 16px;
+    border: 2px solid var(--ink);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+
+  .form-status{
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 0.92rem;
+    font-weight: 500;
+    display: none;
+  }
+  .form-status.show{ display: block; }
+  .form-status.success{ background: rgba(79,209,197,0.1); border: 1px solid rgba(79,209,197,0.25); color: var(--teal); }
+  .form-status.error{ background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); color: var(--error); }
+
+  .contact-info-col{ display:flex; flex-direction:column; gap: 28px; }
+  .contact-info-col h3{
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--paper);
+  }
+  .contact-info-col p{ color: var(--muted); font-size: 0.96rem; line-height: 1.7; }
+
+  .contact-methods{ display:flex; flex-wrap:wrap; gap:14px; }
+  .contact-pill{
+    display:flex; align-items:center; gap:10px; border:1px solid var(--line-strong); border-radius:999px;
+    padding: 12px 20px; font-size:0.92rem; font-weight:500; transition: border-color .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
+  }
+  .contact-pill:hover{ border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+  .contact-pill svg{ width:17px; height:17px; color: var(--teal); }
+  .social-row{ display:flex; gap:14px; margin-top: 10px; }
+  .social-row a{
+    width:42px; height:42px; border-radius:50%; border:1px solid var(--line-strong);
+    display:flex; align-items:center; justify-content:center; transition: border-color .2s var(--ease), transform .2s var(--ease);
+  }
+  .social-row a:hover{ border-color: var(--teal); transform: translateY(-3px); }
+  .social-row svg{ width:18px; height:18px; }
+
+  /* ============ FOOTER ============ */
+  footer{ border-top: 1px solid var(--line); padding-block: 28px; margin-top: clamp(40px,6vw,80px); }
+  .footer-inner{ display:flex; flex-direction:column; gap:14px; align-items:center; text-align:center; font-size:0.86rem; color: var(--muted); }
+  .footer-inner a{ color: var(--paper); font-weight:600; }
+  .to-top{ display:flex; align-items:center; gap:6px; color: var(--muted); font-size:0.82rem; }
+  .to-top svg{ width:14px; height:14px; }
+  .to-top:hover{ color: var(--gold); }
+
+  /* ============ BREAKPOINTS ============ */
+  @media (min-width: 768px){
+    .hero-grid{ grid-template-columns: 1.1fr 0.9fr; }
+    .about-grid{ grid-template-columns: 1.2fr 0.8fr; }
+    .facts dl{ display:grid; grid-template-columns: 120px 1fr; }
+    .facts dd{ text-align:left; }
+    .contact-grid{ grid-template-columns: 1fr 1fr; gap: 64px; }
+  }
+  @media (min-width: 900px){
+    nav.primary-links{ display:block; }
+    .nav-cta{ display:inline-flex; }
+    .menu-btn{ display:none; }
+  }
+  @media (max-width: 899px){
+    .mobile-panel{ display:block; }
+  }
+  @media (min-width: 900px){
+    .mobile-panel{ display:none !important; }
+  }
+</style>
+<base target="_blank">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-nav">
+  <div class="container nav-inner">
+    <a href="#top" class="logo" aria-label="Anmol Dev — home">
+      <span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+      Anmol&nbsp;Dev
+    </a>
+
+    <nav class="primary-links" aria-label="Primary">
+      <ul>
+        <li><a href="#about" data-nav>About</a></li>
+        <li><a href="#stack" data-nav>Stack</a></li>
+        <li><a href="#work" data-nav>Work</a></li>
+        <li><a href="#contact" data-nav>Contact</a></li>
+      </ul>
+    </nav>
+
+    <a class="nav-cta" href="#contact">Let's talk</a>
+
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mobilePanel" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="mobile-panel" id="mobilePanel">
+    <ul>
+      <li><a href="#about" data-nav-mobile>About</a></li>
+      <li><a href="#stack" data-nav-mobile>Stack</a></li>
+      <li><a href="#work" data-nav-mobile>Work</a></li>
+      <li><a href="#contact" data-nav-mobile>Contact</a></li>
+      <li><a href="#contact">Let's talk →</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top">
+    <div class="container hero-grid">
+      <div>
+        <span class="status-pill"><span class="status-dot" aria-hidden="true"></span> Available for new projects — Chandigarh, India</span>
+        <h1>Anmol Singh</h1>
+        <p class="role">Full-stack developer building MERN + Next.js products</p>
+        <p class="lede">I design and ship web applications end to end — from the MongoDB schema to a pixel-correct, responsive interface — for restaurants, ride-hailing platforms, academies, local businesses and real estate teams.</p>
+        <div class="hero-ctas">
+          <a href="#work" class="btn btn-primary">View my work</a>
+          <a href="#contact" class="btn btn-ghost">Get in touch</a>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="tower-card">
+          <div class="tower-label">The build, layer by layer</div>
+          <div class="tower">
+            <div class="tower-layer accent-teal">
+              <div class="layer-top"><span class="layer-name">Interface</span><span class="layer-tag">Client</span></div>
+              <div class="chip-row">
+                <span class="chip">Next.js</span><span class="chip">React</span><span class="chip">Tailwind CSS</span><span class="chip">Bootstrap</span>
+              </div>
+            </div>
+            <div class="tower-layer accent-gold">
+              <div class="layer-top"><span class="layer-name">Server</span><span class="layer-tag">API</span></div>
+              <div class="chip-row">
+                <span class="chip">Node.js</span><span class="chip">Express.js</span>
+              </div>
+            </div>
+            <div class="tower-layer accent-teal">
+              <div class="layer-top"><span class="layer-name">Data</span><span class="layer-tag">Storage</span></div>
+              <div class="chip-row">
+                <span class="chip">MongoDB</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="section" id="about">
+    <div class="container about-grid">
+      <div class="reveal">
+        <span class="eyebrow"><span class="dot"></span> About</span>
+        <h2 style="margin-top:14px;font-size:clamp(1.9rem,3.6vw,2.7rem);">Code that ships, not just compiles</h2>
+        <div class="about-bio" style="margin-top:22px;">
+          <p>I'm Anmol Singh, a MERN and Next.js developer based in Chandigarh. I handle the database, the API and the interface myself, so what reaches a client is a finished product — not a collection of loose parts.</p>
+          <p>Across the projects below, the brief keeps changing — food, mobility, education, local retail, property — but the standard doesn't: fully responsive layouts, clean typography, and markup that's built to be found.</p>
+        </div>
+      </div>
+      <div class="reveal facts" aria-label="Quick facts">
+        <dl><dt>Location</dt><dd>Chandigarh, India</dd></dl>
+        <dl><dt>Email</dt><dd><a href="mailto:singanmol714@gmail.com">singanmol714@gmail.com</a></dd></dl>
+        <dl><dt>Phone</dt><dd><a href="tel:+917851037082">+91 78510&nbsp;37082</a></dd></dl>
+        <dl><dt>Focus</dt><dd>Full-stack web development</dd></dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STACK / SKILLS ============ -->
+  <section class="section" id="stack" style="padding-top:0;">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow"><span class="dot"></span> Stack</span>
+        <h2>What the build is made of</h2>
+        <p>Three layers, one developer. Everything from the schema to the screen.</p>
+      </div>
+
+      <div class="reveal workflow-row" aria-label="Workflow and delivery">
+        <div class="workflow-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="4" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M12 6v4M12 10l-5.5 6M12 10l5.5 6"/></svg>
+          Git &amp; GitHub version control
+        </div>
+        <div class="workflow-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          SEO-first, semantic markup
+        </div>
+        <div class="workflow-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M9 21h6M12 17v4"/></svg>
+          Fully responsive, every breakpoint
+        </div>
+        <div class="workflow-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5a2 2 0 012-2h8l6 6v10a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M14 3v6h6"/></svg>
+          Bootstrap &amp; Tailwind CSS
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WORK ============ -->
+  <section class="section" id="work" style="padding-top:0;">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow"><span class="dot"></span> Selected work</span>
+        <h2>Five products, five different worlds</h2>
+        <p>Each one solves a different real-world problem, built mobile-first and tuned for search.</p>
+      </div>
+
+      <div class="work-grid">
+
+        <article class="project-card reveal" style="--emblem-bg: var(--gold-soft); --emblem-fg: var(--gold);">
+          <div class="project-emblem" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2v8M9 2v8M6 6h3M6 10v12M15 2c-2 1-3 3-3 6s1 3 3 4v10"/></svg>
+          </div>
+          <span class="cat">Food-tech</span>
+          <h3>Restaurant Ordering Platform</h3>
+          <p>A responsive ordering experience — browsable menu, cart and checkout — built for quick decisions on a phone.</p>
+          <div class="project-tags"><span>React</span><span>Node.js</span><span>MongoDB</span></div>
+          <a href="#" class="project-link">View project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </article>
+
+        <article class="project-card reveal" style="--emblem-bg: var(--teal-soft); --emblem-fg: var(--teal);">
+          <div class="project-emblem" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13l2-5a2 2 0 012-1h10a2 2 0 012 1l2 5"/><rect x="2" y="13" width="20" height="6" rx="2"/><circle cx="7" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg>
+          </div>
+          <span class="cat">Mobility</span>
+          <h3>Online Taxi Booking App</h3>
+          <p>A ride-booking interface covering location search, fare estimate and confirmation, designed for speed on small screens.</p>
+          <div class="project-tags"><span>Next.js</span><span>Express.js</span><span>MongoDB</span></div>
+          <a href="#" class="project-link">View project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </article>
+
+        <article class="project-card reveal" style="--emblem-bg: var(--gold-soft); --emblem-fg: var(--gold);">
+          <div class="project-emblem" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3z"/><path d="M3 7.5V15c0 1.5 4 3.5 9 3.5s9-2 9-3.5V7.5"/></svg>
+          </div>
+          <span class="cat">Education &amp; Creative</span>
+          <h3>Imagineus Academy &amp; Agency</h3>
+          <p>A dual-purpose site for a learning academy and creative agency — course listings on one side, service portfolio on the other.</p>
+          <div class="project-tags"><span>Next.js</span><span>Tailwind CSS</span><span>SEO</span></div>
+          <a href="#" class="project-link">View project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </article>
+
+        <article class="project-card reveal" style="--emblem-bg: var(--teal-soft); --emblem-fg: var(--teal);">
+          <div class="project-emblem" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21c4-3 7-6.5 7-10.5A7 7 0 005 10.5C5 14.5 8 18 12 21z"/><path d="M12 14v-3M12 11c0-2-1.5-3-3-3"/></svg>
+          </div>
+          <span class="cat">Local &amp; Green</span>
+          <h3>Local Garden</h3>
+          <p>A catalog-style site for a neighbourhood garden and nursery business, built to load fast and rank for local search.</p>
+          <div class="project-tags"><span>React</span><span>Bootstrap</span><span>SEO</span></div>
+          <a href="#" class="project-link">View project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </article>
+
+        <article class="project-card reveal" style="--emblem-bg: var(--gold-soft); --emblem-fg: var(--gold);">
+          <div class="project-emblem" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V10l8-6 8 6v11"/><path d="M9 21v-6h6v6"/></svg>
+          </div>
+          <span class="cat">Proptech</span>
+          <h3>Real Estate Listings</h3>
+          <p>A property-browsing site with filterable listings and detail pages, structured for clarity across desktop and mobile.</p>
+          <div class="project-tags"><span>Next.js</span><span>MongoDB</span><span>Tailwind CSS</span></div>
+          <a href="#" class="project-link">View project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT / LEAD FORM ============ -->
+  <section class="section" id="contact" style="padding-top:0;">
+    <div class="container">
+      <div class="contact-card reveal">
+        <span class="eyebrow"><span class="dot"></span> Get in touch</span>
+        <h2 style="margin-top:14px;">Let's build something worth it</h2>
+        <p>Have a project in mind? I'd like to hear about it.</p>
+
+        <div class="contact-grid" style="margin-top: 40px;">
+          <!-- Lead Form -->
+          <div class="lead-form-wrapper">
+            <form id="lead-form" novalidate>
+              <div class="form-group">
+                <label for="lead-name">Name</label>
+                <input id="lead-name" name="name" type="text" placeholder="Jane Doe" required />
+              </div>
+              <div class="form-group">
+                <label for="lead-email">Email</label>
+                <input id="lead-email" name="email" type="email" placeholder="jane@example.com" required />
+              </div>
+              <div class="form-group">
+                <label for="lead-phone">Phone</label>
+                <input id="lead-phone" name="phone" type="tel" placeholder="+91 98765 43210" required />
+              </div>
+              <button type="submit" class="form-submit-btn" id="lead-submit">
+                <span class="btn-text">Send message</span>
+              </button>
+            </form>
+            <p id="lead-status" class="form-status" aria-live="polite"></p>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="contact-info-col">
+            <div>
+              <h3>Direct contact</h3>
+              <p>Prefer to reach out directly? Use any of the channels below.</p>
+            </div>
+            <div class="contact-methods">
+              <a class="contact-pill" href="mailto:singanmol714@gmail.com">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/></svg>
+                singanmol714@gmail.com
+              </a>
+              <a class="contact-pill" href="tel:+917851037082">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 015 6a2 2 0 012-2z"/></svg>
+                +91 78510 37082
+              </a>
+              <span class="contact-pill" style="cursor:default;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-7.2 7-12a7 7 0 10-14 0c0 4.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                Chandigarh, India
+              </span>
+            </div>
+            <div class="social-row">
+              <a href="https://github.com/" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.8 5.4.8 11.7c0 5 3.2 9.2 7.7 10.7.6.1.8-.3.8-.6v-2.2c-3.1.7-3.8-1.5-3.8-1.5-.5-1.3-1.2-1.7-1.2-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.1 1.7 1.1 1 1.7 2.6 1.2 3.2.9.1-.7.4-1.2.7-1.5-2.5-.3-5.1-1.2-5.1-5.5 0-1.2.4-2.2 1.1-3-.1-.3-.5-1.5.1-3.1 0 0 .9-.3 3 1.1.9-.2 1.8-.4 2.8-.4s1.9.1 2.8.4c2.1-1.4 3-1.1 3-1.1.6 1.6.2 2.8.1 3.1.7.8 1.1 1.8 1.1 3 0 4.3-2.6 5.2-5.1 5.5.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.5-1.5 7.7-5.7 7.7-10.7C23.2 5.4 18.3.5 12 .5z"/></svg>
+              </a>
+              <a href="mailto:singanmol714@gmail.com" aria-label="Send an email">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <div>© <span id="year"></span> <a href="#top">Anmol Singh</a> — built with care in Chandigarh.</div>
+    <a class="to-top" href="#top">Back to top <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Mobile menu
+  const menuBtn = document.getElementById('menuBtn');
+  const mobilePanel = document.getElementById('mobilePanel');
+  menuBtn.addEventListener('click', () => {
+    const open = mobilePanel.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.querySelectorAll('[data-nav-mobile]').forEach(link => {
+    link.addEventListener('click', () => {
+      mobilePanel.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Active nav link on scroll
+  const navLinks = document.querySelectorAll('[data-nav]');
+  const sections = ['about','stack','work','contact'].map(id => document.getElementById(id));
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + entry.target.id));
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+  sections.forEach(s => s && navObserver.observe(s));
+
+  // Reveal on scroll
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  // ============ LEAD FORM ============
+  const endpoint = 'https://saasprojrct.vercel.app/api/leads';
+  const apiKey = 'i_ux4zD3Wf-NEoaUxJS8mthk52mE-WRASNo9l15IO9A';
+  const form = document.getElementById('lead-form');
+  const statusEl = document.getElementById('lead-status');
+  const submitBtn = document.getElementById('lead-submit');
+  const btnText = submitBtn.querySelector('.btn-text');
+
+  function setStatus(message, type) {
+    statusEl.textContent = message;
+    statusEl.className = 'form-status show ' + (type || '');
+  }
+
+  function setLoading(loading) {
+    submitBtn.disabled = loading;
+    if (loading) {
+      btnText.innerHTML = '<span class="spinner"></span> Submitting...';
+    } else {
+      btnText.textContent = 'Send message';
+    }
+  }
+
+  form.addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    // Basic validation
+    const name = form.querySelector('[name="name"]').value.trim();
+    const email = form.querySelector('[name="email"]').value.trim();
+    const phone = form.querySelector('[name="phone"]').value.trim();
+
+    if (!name || !email || !phone) {
+      setStatus('Please fill in all fields.', 'error');
+      return;
+    }
+
+    setStatus('');
+    setLoading(true);
+
+    try {
+      const payload = Object.fromEntries(new FormData(form).entries());
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Api-Key': apiKey
+        },
+        body: JSON.stringify(payload)
       });
-    </script>
-  </body>
-</html>
+
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || 'Failed to submit lead');
+      }
+
+      form.reset();
+      setStatus('Lead submitted successfully. I will get back to you soon.', 'success');
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : 'Failed to submit lead', 'error');
+    } finally {
+      setLoading(false);
+    }
+  });
+</script>
+</body>
+  </html>
